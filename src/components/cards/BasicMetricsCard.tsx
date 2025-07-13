@@ -1,10 +1,25 @@
-export default function BasicMetricsCard({
+import React from "react";
+
+type Duration = {
+  label: string;
+  range: string;
+};
+
+type Props = {
+  total: number;
+  uniqueChains: number;
+  duration: Duration;
+  success: number;
+  failed: number;
+};
+
+const BasicMetricsCard: React.FC<Props> = ({
   total,
   uniqueChains,
   duration,
   success,
   failed,
-}) {
+}) => {
   const successPercent = Math.round((success / (success + failed)) * 100);
 
   return (
@@ -87,4 +102,6 @@ export default function BasicMetricsCard({
       </div>
     </div>
   );
-}
+};
+
+export default BasicMetricsCard;

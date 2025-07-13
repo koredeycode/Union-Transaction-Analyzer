@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export default function ThemeToggle() {
-  const [isLight, setIsLight] = useState(false);
+const ThemeToggle: React.FC = () => {
+  const [isLight, setIsLight] = useState<boolean>(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -30,4 +30,6 @@ export default function ThemeToggle() {
       <span className="slider"></span>
     </label>
   );
-}
+};
+
+export default ThemeToggle;

@@ -1,3 +1,6 @@
+import type { Transfer } from "../types"; // Make sure this is defined in your types.ts
+// Make sure this is defined in your types.ts
+
 const endpoint = "https://graphql.union.build/v1/graphql";
 
 const headers = {
@@ -44,10 +47,17 @@ const unifiedQuery = `
   }
 `;
 
-export async function fetchTransfers({ address, limit = 100, page = null }) {
-  // const allTransfers = [];
-  // let page = null;
+interface FetchTransfersOptions {
+  address: string;
+  limit?: number;
+  page?: string | null;
+}
 
+export async function fetchTransfers({
+  address,
+  limit = 100,
+  page = null,
+}: FetchTransfersOptions): Promise<Transfer[]> {
   try {
     const body = JSON.stringify({
       query: unifiedQuery,
@@ -66,10 +76,9 @@ export async function fetchTransfers({ address, limit = 100, page = null }) {
     });
 
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const json = await res.json();
-    const transfers = json.data?.v2_transfers || [];
 
-    page = transfers[transfers.length - 1].sort_order;
+    const json = await res.json();
+    const transfers: Transfer[] = json.data?.v2_transfers || [];
 
     return transfers;
   } catch (err) {

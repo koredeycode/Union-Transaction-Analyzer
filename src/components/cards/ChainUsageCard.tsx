@@ -1,12 +1,22 @@
-export default function ChainUsageCard({
+import React from "react";
+
+type ChainItem = {
+  label: string;
+  count: number;
+};
+
+type Props = {
+  sourceChains: ChainItem[];
+  destinationChains: ChainItem[];
+  total: number;
+};
+
+const ChainUsageCard: React.FC<Props> = ({
   sourceChains,
   destinationChains,
   total,
-}) {
-  const maxSource = Math.max(...sourceChains.map((c) => c.count));
-  const maxDest = Math.max(...destinationChains.map((c) => c.count));
-
-  const renderBar = (label, count, color) => (
+}) => {
+  const renderBar = (label: string, count: number, color: string) => (
     <div className="w-full" key={label}>
       <p className="text-sm mb-1 text-[var(--text-primary)]">
         {label} ({count})
@@ -25,7 +35,7 @@ export default function ChainUsageCard({
       <h4 className="text-lg font-semibold mb-3 text-left text-[var(--text-primary)]">
         Chain Usage
       </h4>
-      <div className="grid grid-cols-1  gap-6 text-left">
+      <div className="grid grid-cols-1 gap-6 text-left">
         <div className="glass-effect p-4 rounded-xl">
           <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
             Top Source Chains
@@ -55,4 +65,6 @@ export default function ChainUsageCard({
       </div>
     </div>
   );
-}
+};
+
+export default ChainUsageCard;

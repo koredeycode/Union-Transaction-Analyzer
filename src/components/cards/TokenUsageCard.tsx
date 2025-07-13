@@ -1,7 +1,17 @@
-export default function TokenUsageCard({ tokens, total }) {
-  // const maxCount = Math.max(...tokens.map((t) => t.count));
+import React from "react";
 
-  const getColor = (index) => {
+type TokenData = {
+  label: string;
+  count: number;
+};
+
+type Props = {
+  tokens: TokenData[];
+  total: number;
+};
+
+const TokenUsageCard: React.FC<Props> = ({ tokens, total }) => {
+  const getColor = (index: number): string => {
     const colors = [
       "bg-green-400",
       "bg-yellow-400",
@@ -29,7 +39,9 @@ export default function TokenUsageCard({ tokens, total }) {
             <div className="bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
               <div
                 className={`${getColor(index)} h-2.5 rounded-full`}
-                style={{ width: `${(token.count / total) * 100}%` }}
+                style={{
+                  width: total > 0 ? `${(token.count / total) * 100}%` : "0%",
+                }}
               ></div>
             </div>
           </div>
@@ -37,4 +49,6 @@ export default function TokenUsageCard({ tokens, total }) {
       </div>
     </div>
   );
-}
+};
+
+export default TokenUsageCard;

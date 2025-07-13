@@ -1,16 +1,26 @@
-export default function TemporalActivityCard({
+import React from "react";
+
+type DataPoint = {
+  label: string;
+  count: number;
+};
+
+type Props = {
+  weekdayData: DataPoint[];
+  monthlyData: DataPoint[];
+  total: number;
+};
+
+const TemporalActivityCard: React.FC<Props> = ({
   weekdayData,
   monthlyData,
   total,
-}) {
-  // const maxWeek = Math.max(...weekdayData.map((d) => d.count));
-  // const maxMonth = Math.max(...monthlyData.map((d) => d.count));
-
-  const barHeight = (count) => `${(count / total) * 100}%`;
-  // total ? `max(${(count / total) * 100}%, 4px)` : "0%";
+}) => {
+  const barHeight = (count: number): string =>
+    total > 0 ? `${(count / total) * 100}%` : "0%";
 
   return (
-    <div className="">
+    <div>
       <h4 className="text-lg font-semibold mb-3 text-left text-[var(--text-primary)]">
         Temporal Insight
       </h4>
@@ -35,13 +45,6 @@ export default function TemporalActivityCard({
                 >
                   <div className="bg-[var(--accent)] w-full h-full rounded-t-md"></div>
                 </div>
-
-                {/* <div
-                  className="w-full bg-slate-200 dark:bg-slate-700 rounded-t-md"
-                  style={{ height: dayBarHeight(day.count) }}
-                >
-                  <div className="bg-[var(--accent)] w-full h-full rounded-t-md"></div>
-                </div> */}
                 <p className="text-xs text-[var(--text-secondary)] mt-1">
                   {day.label.slice(0, 3)}
                 </p>
@@ -80,4 +83,6 @@ export default function TemporalActivityCard({
       </div>
     </div>
   );
-}
+};
+
+export default TemporalActivityCard;

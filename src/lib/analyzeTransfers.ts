@@ -1,14 +1,18 @@
-export function analyzeTransfers(transfers) {
+import type { Transfer, TransferAnalysisResult } from "../types";
+
+export function analyzeTransfers(
+  transfers: Transfer[]
+): TransferAnalysisResult | null {
   if (!Array.isArray(transfers)) return null;
 
   const basic = {
     totalTransactions: transfers.length,
-    uniqueChains: new Set(),
-    timestamps: [],
+    uniqueChains: new Set<string>(),
+    timestamps: [] as Date[],
     statusCounts: { completed: 0, pending: 0 },
   };
 
-  const weekdayActivity = {
+  const weekdayActivity: Record<string, number> = {
     Monday: 0,
     Tuesday: 0,
     Wednesday: 0,
@@ -18,26 +22,35 @@ export function analyzeTransfers(transfers) {
     Sunday: 0,
   };
 
-  const monthActivity = {};
-  const sourceChains = {};
-  const destinationChains = {};
-  const routes = {};
-  const tokenStats = {};
+  const monthActivity: Record<string, number> = {};
+  const sourceChains: Record<string, number> = {};
+  const destinationChains: Record<string, number> = {};
+  const routes: Record<string, number> = {};
+  const tokenStats: Record<
+    string,
+    {
+      symbol: string;
+      name: string | null;
+      totalTransferred: number;
+      transferCount: number;
+    }
+  > = {};
 
   for (const tx of transfers) {
     const sendTime = new Date(tx.transfer_send_timestamp);
     basic.timestamps.push(sendTime);
 
     const weekday = sendTime.toLocaleDateString("en-US", { weekday: "long" });
-    const monthKey = sendTime.toISOString().slice(0, 7);
+    const monthKey = sendTime.toISOString().slice(0, 7); // YYYY-MM
 
     weekdayActivity[weekday] = (weekdayActivity[weekday] || 0) + 1;
     monthActivity[monthKey] = (monthActivity[monthKey] || 0) + 1;
 
-    const src = tx.source_chain;
-    const dst = tx.destination_chain;
-    const srcLabel = src.display_name || src.universal_chain_id;
-    const dstLabel = dst.display_name || dst.universal_chain_id;
+    const srcLabel =
+      tx.source_chain.display_name || tx.source_chain.universal_chain_id;
+    const dstLabel =
+      tx.destination_chain.display_name ||
+      tx.destination_chain.universal_chain_id;
 
     sourceChains[srcLabel] = (sourceChains[srcLabel] || 0) + 1;
     destinationChains[dstLabel] = (destinationChains[dstLabel] || 0) + 1;
@@ -48,10 +61,11 @@ export function analyzeTransfers(transfers) {
     if (tx.transfer_recv_timestamp) basic.statusCounts.completed++;
     else basic.statusCounts.pending++;
 
-    var symbol = tx.base_token_symbol || tx.base_token;
+    let symbol = tx.base_token_symbol || tx.base_token;
     if (symbol.length > 20) {
       symbol = `${symbol.slice(0, 5)}...${symbol.slice(-5)}`;
     }
+
     const decimals = tx.base_token_decimals || 18;
     const rawAmount = BigInt(tx.base_amount);
     const amount = Number(rawAmount) / 10 ** decimals;
@@ -72,18 +86,20 @@ export function analyzeTransfers(transfers) {
     basic.uniqueChains.add(dstLabel);
   }
 
-  const sortByValue = (obj) => Object.entries(obj).sort((a, b) => b[1] - a[1]);
+  const sortByValue = (obj: Record<string, number>) =>
+    Object.entries(obj).sort((a, b) => b[1] - a[1]);
 
-  const sortedTimestamps = basic.timestamps.sort((a, b) => a - b);
+  const sortedTimestamps = basic.timestamps.sort(
+    (a, b) => a.getTime() - b.getTime()
+  );
   const firstDate = sortedTimestamps[0];
   const lastDate = sortedTimestamps[sortedTimestamps.length - 1];
   const durationDays = Math.ceil(
-    (lastDate - firstDate) / (1000 * 60 * 60 * 24)
+    (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)
   );
 
   const topWeekday = sortByValue(weekdayActivity)[0]?.[0] || "N/A";
   const oldTopMonth = sortByValue(monthActivity)[0]?.[0] || "N/A";
-
   const date = new Date(`${oldTopMonth}-01`);
   const topMonth = date.toLocaleDateString("en-US", {
     month: "short",
@@ -114,12 +130,11 @@ export function analyzeTransfers(transfers) {
         count,
       })),
       monthlyData: Object.entries(monthActivity).map(([key, count]) => {
-        const [year, month] = key.split("-");
         const date = new Date(`${key}-01`);
         const label = date.toLocaleDateString("en-US", {
           month: "short",
           year: "2-digit",
-        }); // → "Jul 25"
+        });
         return { label, count };
       }),
     },
@@ -148,7 +163,7 @@ export function analyzeTransfers(transfers) {
       total: basic.totalTransactions,
       uniqueChains: basic.uniqueChains.size,
       topDay: topWeekday,
-      topMonth: topMonth,
+      topMonth,
       topRoute: {
         source: topRouteSrc || "N/A",
         destination: topRouteDst || "N/A",

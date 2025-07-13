@@ -1,31 +1,38 @@
 import { useEffect, useState } from "react";
-
 import { fetchTransfers } from "../lib/unionApi";
 import { analyzeTransfers } from "../lib/analyzeTransfers";
-import data from "./sample.json";
+import type { TransferAnalysisResult, Transfer } from "../types"; // ← define these
+// ← define these
+
+interface AnalysisModalProps {
+  isOpen: boolean;
+  walletAddress: string;
+  onShowResult: () => void;
+  onSetResult: (result: TransferAnalysisResult | null) => void;
+}
 
 export default function AnalysisModal({
   isOpen,
-  onClose,
+  walletAddress,
   onShowResult,
   onSetResult,
-  walletAddress,
-}) {
-  const [transactionCount, setTransactionCount] = useState(0);
-  const [phase, setPhase] = useState("extracting"); // extracting → analyzing → done
-  const [isCancelled, setIsCancelled] = useState(false);
+}: AnalysisModalProps) {
+  const [transactionCount, setTransactionCount] = useState<number>(0);
+  const [phase, setPhase] = useState<"extracting" | "analyzing" | "done">(
+    "extracting"
+  );
 
   useEffect(() => {
     if (!isOpen || !walletAddress) return;
 
-    // let isCancelled = false;
+    let cancelled = false;
 
     async function fetchAndAnalyze() {
       setTransactionCount(0);
       setPhase("extracting");
 
-      const transfers = [];
-      let page = null;
+      const transfers: Transfer[] = [];
+      let page: string | null = null;
 
       while (true) {
         const batch = await fetchTransfers({
@@ -35,47 +42,38 @@ export default function AnalysisModal({
         });
 
         if (!batch.length) break;
-
         transfers.push(...batch);
         setTransactionCount(transfers.length);
 
         const lastSortOrder = batch[batch.length - 1].sort_order;
-        if (!lastSortOrder || batch.length < 100) {
-          break;
-        }
-
+        if (!lastSortOrder || batch.length < 100) break;
         page = lastSortOrder;
-
-        //offline
-        // transfers.push(...data);
-        // setTransactionCount(transfers.length);
-        // break;
       }
 
-      // if (isCancelled) return;
-      console.log("setiing phse to analysing");
+      if (cancelled) return;
+
       setPhase("analyzing");
 
       setTimeout(() => {
-        if (!isCancelled) {
-          const result = analyzeTransfers(transfers);
-          onSetResult(result);
-          setPhase("done");
-        }
+        if (cancelled) return;
+        const result = analyzeTransfers(transfers);
+        onSetResult(result);
+        setPhase("done");
       }, 1500);
     }
 
     fetchAndAnalyze();
 
     return () => {
-      // isCancelled = true;
+      cancelled = true;
     };
   }, []);
-  // }, [isOpen, walletAddress, onComplete]);
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isOpen);
-    return () => document.body.classList.remove("overflow-hidden");
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -103,12 +101,6 @@ export default function AnalysisModal({
               <p className="text-[var(--text-primary)]">
                 Getting transactions - ({transactionCount} transactions found)
               </p>
-              {/* <div className="w-full bg-slate-700 rounded-full h-1.5 mt-1">
-                <div
-                  className="bg-[var(--accent)] h-1.5 rounded-full progress-bar"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div> */}
             </div>
           </div>
 
@@ -150,15 +142,6 @@ export default function AnalysisModal({
             >
               Show Results
             </button>
-            {/* <p className="text-sm text-[var(--text-secondary)] mb-3">
-              or download the result
-            </p>
-            <div className="flex justify-center items-center">
-              <button className="flex items-center gap-2 bg-[var(--card-background)] hover:bg-opacity-70 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all duration-200 px-4 py-2 rounded-lg border border-[var(--card-border)]">
-                <span className="material-icons-outlined">file_download</span>
-                <span className="font-medium">JSON</span>
-              </button>
-            </div> */}
           </div>
         )}
       </div>

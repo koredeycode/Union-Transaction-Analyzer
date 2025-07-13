@@ -1,7 +1,7 @@
 import ThemeToggle from "./ThemeToggle";
-// import 'material-icons/iconfont/material-icons.css'; // Optional CDN alternative
+import React from "react";
 
-export default function Header() {
+const Header: React.FC = () => {
   return (
     <header className="flex justify-between items-center p-6">
       <div className="flex items-center gap-2">
@@ -17,4 +17,6 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

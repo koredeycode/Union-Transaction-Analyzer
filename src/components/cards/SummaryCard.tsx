@@ -1,11 +1,27 @@
-export default function SummaryCard({
+import React from "react";
+
+type TopRoute = {
+  source: string;
+  destination: string;
+};
+
+type Props = {
+  total: number;
+  uniqueChains: number;
+  topDay: string;
+  topMonth: string;
+  topRoute: TopRoute;
+  topToken: string;
+};
+
+const SummaryCard: React.FC<Props> = ({
   total,
   uniqueChains,
   topDay,
   topMonth,
   topRoute,
   topToken,
-}) {
+}) => {
   return (
     <div>
       <h4 className="md:text-lg text-sm font-semibold mb-3 text-left text-[var(--text-primary)]">
@@ -67,4 +83,6 @@ export default function SummaryCard({
       </div>
     </div>
   );
-}
+};
+
+export default SummaryCard;

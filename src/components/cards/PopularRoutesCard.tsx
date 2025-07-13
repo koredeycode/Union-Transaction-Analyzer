@@ -1,4 +1,16 @@
-export default function PopularRoutesCard({ routes }) {
+import React from "react";
+
+type Route = {
+  source: string;
+  destination: string;
+  count: number;
+};
+
+type Props = {
+  routes: Route[];
+};
+
+const PopularRoutesCard: React.FC<Props> = ({ routes }) => {
   return (
     <div className="p-4 rounded-xl text-left glass-effect">
       <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
@@ -38,4 +50,6 @@ export default function PopularRoutesCard({ routes }) {
       </div>
     </div>
   );
-}
+};
+
+export default PopularRoutesCard;

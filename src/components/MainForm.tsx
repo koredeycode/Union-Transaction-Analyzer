@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
-export default function MainForm({ onAnalyze }) {
-  const [wallet, setWallet] = useState("");
+interface MainFormProps {
+  onAnalyze: (wallet: string) => void;
+}
 
-  const handleAnalyze = (e) => {
+export default function MainForm({ onAnalyze }: MainFormProps) {
+  const [wallet, setWallet] = useState<string>("");
+
+  const handleAnalyze = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!wallet) {
-      alert("insert wallet");
+      alert("Insert wallet");
       return;
     }
     onAnalyze(wallet);
