@@ -28,27 +28,28 @@ export default function AnalysisModal({
       let page = null;
 
       while (true) {
-        // const batch = await fetchTransfers({
-        //   address: walletAddress,
-        //   limit: 100,
-        //   page,
-        // });
+        const batch = await fetchTransfers({
+          address: walletAddress,
+          limit: 100,
+          page,
+        });
 
-        // if (!batch.length) break;
+        if (!batch.length) break;
 
-        // transfers.push(...batch);
-        // setTransactionCount(transfers.length);
-
-        // const lastSortOrder = batch[batch.length - 1].sort_order;
-        // if (!lastSortOrder || batch.length < 100) {
-        //   break;
-        // }
-
-        // page = lastSortOrder;
-        console.log(data);
-        transfers.push(...data);
+        transfers.push(...batch);
         setTransactionCount(transfers.length);
-        break;
+
+        const lastSortOrder = batch[batch.length - 1].sort_order;
+        if (!lastSortOrder || batch.length < 100) {
+          break;
+        }
+
+        page = lastSortOrder;
+
+        //offline
+        // transfers.push(...data);
+        // setTransactionCount(transfers.length);
+        // break;
       }
 
       // if (isCancelled) return;
