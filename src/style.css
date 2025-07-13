@@ -1,0 +1,169 @@
+
+        :root {
+            --background: #030711;
+            --foreground: #ffffff;
+            --card-background: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #9CA3AF;
+            --text-tertiary: #6B7280;
+            --accent: #A0ECFD;
+            --accent-dark: #030711;
+            --input-bg: #1F2937; 
+            --input-border: #374151;
+            --ring-color: #A0ECFD;
+        }
+        html.light {
+            --background: #F9FAFB;
+            --foreground: #111827;
+            --card-background: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --text-primary: #111827;
+            --text-secondary: #4B5563;
+            --text-tertiary: #9CA3AF;
+            --accent: #38BDF8;
+            --accent-dark: #ffffff;
+            --input-bg: #ffffff;
+            --input-border: #D1D5DB;
+            --ring-color: #38BDF8;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .glass-effect {
+            background: var(--card-background);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            transition: background 0.5s, border 0.5s;
+        }
+        .progress-bar {
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        .result-item {
+            animation: slide-in 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes slide-in {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .carousel-item {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carousel-item.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #273c4B;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23273c4B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 008.25-4.5c.206-.332.39-.68.552-1.048z' /%3E%3C/svg%3E");
+            background-size: 20px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23111827'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z' /%3E%3C/svg%3E%0A");
+             background-color: var(--accent-dark);
+        }
+        .story-progress-bar {
+            width: 0%;
+            animation: progressBar 5s linear forwards;
+        }
+        @keyframes progressBar {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .animate-view-in {
+            animation: viewIn 0.5s ease-out forwards;
+        }
+        @keyframes viewIn {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .animate-spin-slow {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    
