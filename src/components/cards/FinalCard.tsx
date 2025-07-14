@@ -24,7 +24,7 @@ const FinalCard: React.FC<Props> = ({
           className="mb-4 w-full bg-slate-800 dark:bg-black hover:bg-slate-700 dark:hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
           onClick={() => {
             const tweetText = encodeURIComponent(
-              `My @union_build journey 🚀\n\n📊 ${total} txns over ${days} days and ${uniqueChains} chains\n🔁 Top Route: ${topRoute.source} → ${topRoute.destination}\n💎 Top Token: ${topToken}\n\nFull stats in the images below!\n\nCheck yours at union-transaction-analyzer.vercel.app\n\nBuilt by @korefomo`
+              `ZKGM\n\nMy @union_build journey 🚀\n\n📊 ${total} txns over ${days} days and ${uniqueChains} chains\n🔁 Top Route: ${topRoute.source} → ${topRoute.destination}\n💎 Top Token: ${topToken}\n\nFull stats in the images below!\n\nCheck yours at union-transaction-analyzer.vercel.app\n\nBuilt by @korefomo`
             );
 
             const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;

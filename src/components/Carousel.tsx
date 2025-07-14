@@ -139,26 +139,6 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
       </div> */}
 
       {/* Navigation Arrows */}
-      <button
-        onClick={() => showSlide(currentIndex - 1)}
-        className={`absolute top-1/2 -translate-y-1/2 left-2 glass-effect rounded-full p-1 z-10 ${
-          currentIndex === 0 ? "invisible" : ""
-        }`}
-      >
-        <span className="material-icons-outlined text-[var(--text-primary)]">
-          chevron_left
-        </span>
-      </button>
-      <button
-        onClick={() => showSlide(currentIndex + 1)}
-        className={`absolute top-1/2 -translate-y-1/2 right-2 glass-effect rounded-full p-1 z-10 ${
-          currentIndex === slides.length - 1 ? "invisible" : ""
-        }`}
-      >
-        <span className="material-icons-outlined text-[var(--text-primary)]">
-          chevron_right
-        </span>
-      </button>
 
       {/* Slide Cards */}
       <div className="relative overflow-hidden">
@@ -184,6 +164,28 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
             </p>
           </div>
         ))}
+      </div>
+      <div>
+        <button
+          onClick={() => showSlide(currentIndex - 1)}
+          className={`rounded-full p-1 z-10 ${
+            currentIndex === 0 ? "invisible" : ""
+          }`}
+        >
+          <span className="material-icons-outlined text-3xl text-[var(--text-primary)]">
+            chevron_left
+          </span>
+        </button>
+        <button
+          onClick={() => showSlide(currentIndex + 1)}
+          className={`rounded-full p-1 z-10 ${
+            currentIndex === slides.length - 1 ? "invisible" : ""
+          }`}
+        >
+          <span className="material-icons-outlined text-3xl text-[var(--text-primary)]">
+            chevron_right
+          </span>
+        </button>
       </div>
     </div>
   );
