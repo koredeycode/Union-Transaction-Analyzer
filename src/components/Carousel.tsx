@@ -138,8 +138,6 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
         </button>
       </div> */}
 
-      {/* Navigation Arrows */}
-
       {/* Slide Cards */}
       <div className="relative overflow-hidden">
         {slides.map((slide, idx) => (
@@ -165,7 +163,8 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
           </div>
         ))}
       </div>
-      <div>
+      {/* Navigation Arrows */}
+      <div className="pt-4">
         <button
           onClick={() => showSlide(currentIndex - 1)}
           className={`rounded-full p-1 z-10 ${

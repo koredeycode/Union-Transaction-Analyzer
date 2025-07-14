@@ -70,7 +70,7 @@ export default function AnalysisModal({
           setPhase("done");
         }, 1500);
       } catch (err) {
-        console.error("❌ Error during analysis:", err);
+        console.error("Error during analysis:", err);
         setHasError(true);
       }
     }
@@ -103,7 +103,6 @@ export default function AnalysisModal({
             status="extracting"
             label={`Getting transactions - (${transactionCount} found)`}
             success={transactionCount > 0}
-            // showError={phase !== "extracting" && transactionCount === 0}
             showError={hasError}
           />
 
@@ -149,7 +148,7 @@ export default function AnalysisModal({
   );
 }
 
-// Small reusable helper for cleaner render
+
 function StatusRow({
   phase,
   status,
