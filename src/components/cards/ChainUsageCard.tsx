@@ -32,10 +32,10 @@ const ChainUsageCard: React.FC<Props> = ({
 
   return (
     <div>
-      <h4 className="text-lg font-semibold mb-3 text-left text-[var(--text-primary)]">
+      <h4 className="text-lg font-semibold mb-2 text-left text-[var(--text-primary)]">
         Chain Usage
       </h4>
-      <div className="grid grid-cols-1 gap-6 text-left">
+      <div className="grid grid-cols-1 gap-5 text-left">
         <div className="glass-effect p-4 rounded-xl">
           <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
             Top 3 Source Chains

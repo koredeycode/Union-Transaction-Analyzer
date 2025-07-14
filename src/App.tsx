@@ -100,8 +100,8 @@ export default function App() {
       )}
 
       {isModalOpen && showResults && result && (
-        <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md flex justify-center items-start z-50 overflow-y-auto p-4">
-          <div className="glass-effect rounded-2xl w-full max-w-lg text-center relative mt-8 mb-8">
+        <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md flex justify-center items-start z-50 overflow-y-auto max-h-screen">
+          <div className="glass-effect rounded-2xl w-full max-w-lg text-center relative mt-8 md:mt-2">
             <button
               className="absolute top-4 right-4 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors z-20"
               onClick={() => {

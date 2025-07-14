@@ -24,7 +24,7 @@ const BasicMetricsCard: React.FC<Props> = ({
 
   return (
     <div>
-      <h4 className="text-lg font-semibold mb-3 text-left text-[var(--text-primary)]">
+      <h4 className="text-lg font-semibold mb-2 text-left text-[var(--text-primary)]">
         Basic Metrics
       </h4>
       <div className="grid grid-cols-2 gap-4 text-left">

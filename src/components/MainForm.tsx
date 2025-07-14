@@ -24,19 +24,24 @@ export default function MainForm({ onAnalyze }: MainFormProps) {
   const handleAnalyze = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!evmWallet || !isValidEvmAddress(evmWallet.trim())) {
+    if (!evmWallet && !cosmosWallet) {
+      setErrorMessage("Please enter at least one wallet address.");
+      setShowError(true);
+      return;
+    }
+
+    if (evmWallet && !isValidEvmAddress(evmWallet.trim())) {
       setErrorMessage("Please enter a valid EVM wallet address.");
       setShowError(true);
       return;
     }
 
-    if (!cosmosWallet || !isValidBech32Address(cosmosWallet.trim())) {
+    if (cosmosWallet && !isValidBech32Address(cosmosWallet.trim())) {
       setErrorMessage("Please enter a valid Cosmos wallet address.");
       setShowError(true);
       return;
     }
 
-    console.log(evmWallet.trim(), bech32AddressToHex(cosmosWallet.trim()));
     onAnalyze(evmWallet.trim(), bech32AddressToHex(cosmosWallet.trim()));
   };
 
@@ -47,10 +52,10 @@ export default function MainForm({ onAnalyze }: MainFormProps) {
         <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-[var(--accent)] opacity-20 blur-[100px]"></div>
       </div>
 
-      <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-5 text-[var(--text-primary)]">
+      <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-5 text-[var(--text-primary)]">
         Analyze Your Union Transactions
       </h2>
-      <p className="text-[var(--text-secondary)] mb-10 max-w-lg text-lg">
+      <p className="text-[var(--text-secondary)] mb-10 max-w-lg text-sm md:text-lg">
         Enter your wallet address to fetch and analyse your transactions.
       </p>
 
@@ -65,7 +70,7 @@ export default function MainForm({ onAnalyze }: MainFormProps) {
                 showError
                   ? "border-red-500 animate-shake"
                   : "border-[var(--input-border)]"
-              } rounded-xl px-5 py-4 text-center placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-color)] transition-all text-base text-[var(--text-primary)]`}
+              } rounded-xl px-5 py-4 text-center text-sm placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-color)] transition-all text-base text-[var(--text-primary)]`}
               type="text"
             />
           </div>

@@ -21,12 +21,12 @@ const TemporalActivityCard: React.FC<Props> = ({
 
   return (
     <div>
-      <h4 className="text-lg font-semibold mb-3 text-left text-[var(--text-primary)]">
+      <h4 className="text-lg font-semibold mb-2 text-left text-[var(--text-primary)]">
         Temporal Insight
       </h4>
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Weekday chart */}
-        <div className="p-4 rounded-xl text-left glass-effect">
+        <div className="p-3 rounded-xl text-left glass-effect">
           <p className="text-sm text-[var(--text-secondary)] text-left mb-2">
             By Weekday
           </p>
@@ -54,7 +54,7 @@ const TemporalActivityCard: React.FC<Props> = ({
         </div>
 
         {/* Monthly chart */}
-        <div className="p-4 rounded-xl text-left glass-effect">
+        <div className="p-3 rounded-xl text-left glass-effect">
           <p className="text-sm text-[var(--text-secondary)] text-left mb-2">
             By Month
           </p>

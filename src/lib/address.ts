@@ -2,6 +2,7 @@ import { fromBech32 } from "@cosmjs/encoding";
 import { bech32 } from "bech32";
 
 export function toCanonical(bech32Address: string): string {
+  if (!bech32Address) return "";
   const { data: canonicalBytes } = fromBech32(bech32Address);
 
   // Convert Uint8Array to hex string manually

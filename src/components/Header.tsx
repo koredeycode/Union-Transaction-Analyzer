@@ -9,10 +9,10 @@ const Header: React.FC = () => {
           data_usage
         </span>
         <div>
-          <h1 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+          <h1 className="md:text-lg font-bold tracking-tight text-[var(--text-primary)]">
             Union Txns
           </h1>
-          <h1 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+          <h1 className="md:text-lg font-bold tracking-tight text-[var(--text-primary)]">
             Analyzer
           </h1>
         </div>

@@ -40,7 +40,7 @@ export default function AnalysisModal({
       try {
         while (!cancelled) {
           const batch = await fetchTransfers({
-            addresses: walletAddresses,
+            addresses: walletAddresses.filter((e) => e),
             limit: 100,
             page,
           });

@@ -99,14 +99,14 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
   // };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto px-4 animate-view-in p-6">
-      <h3 className="text-3xl font-bold mb-2 text-center text-[var(--text-primary)]">
+    <div className="relative w-full max-w-4xl mx-auto px-4 animate-view-in p-4">
+      <h3 className="text-lg font-bold mb-2 text-center text-[var(--text-primary)]">
         Your Union Story
       </h3>
 
       {/* Progress Indicators */}
       <div
-        className="mb-4 h-1 w-full max-w-sm mx-auto flex space-x-1"
+        className="mb-2 h-1 w-full max-w-sm mx-auto flex space-x-1"
         id="carousel-indicators"
       >
         {slides.map((_, i) => (
@@ -146,10 +146,10 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
             id={`card-${idx}`}
             className={`carousel-item ${
               idx === currentIndex ? "active" : "hidden"
-            } relative md:m-4 md:p-6 p-3 glass-effect rounded-xl capture-card`}
+            } relative md:m-4 p-3 glass-effect rounded-xl capture-card`}
           >
             {slide}
-            <p className="text-xs text-center mt-4 text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">
               designed by{" "}
               <a
                 className="font-semibold text-[var(--accent)] hover:underline"
@@ -164,7 +164,7 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
         ))}
       </div>
       {/* Navigation Arrows */}
-      <div className="pt-4">
+      <div className="pt-2">
         <button
           onClick={() => showSlide(currentIndex - 1)}
           className={`rounded-full p-1 z-10 ${
