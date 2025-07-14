@@ -6,7 +6,7 @@ import type { TransferAnalysisResult, Transfer } from "../types";
 interface AnalysisModalProps {
   isOpen: boolean;
   setIsOpen: (state: boolean) => void;
-  walletAddress: string;
+  walletAddresses: string[];
   onShowResult: () => void;
   onSetResult: (result: TransferAnalysisResult | null) => void;
 }
@@ -14,7 +14,7 @@ interface AnalysisModalProps {
 export default function AnalysisModal({
   isOpen,
   setIsOpen,
-  walletAddress,
+  walletAddresses,
   onShowResult,
   onSetResult,
 }: AnalysisModalProps) {
@@ -25,7 +25,7 @@ export default function AnalysisModal({
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (!isOpen || !walletAddress) return;
+    if (!isOpen || !walletAddresses) return;
 
     let cancelled = false;
 
@@ -40,7 +40,7 @@ export default function AnalysisModal({
       try {
         while (!cancelled) {
           const batch = await fetchTransfers({
-            address: walletAddress,
+            addresses: walletAddresses,
             limit: 100,
             page,
           });
@@ -147,7 +147,6 @@ export default function AnalysisModal({
     </div>
   );
 }
-
 
 function StatusRow({
   phase,

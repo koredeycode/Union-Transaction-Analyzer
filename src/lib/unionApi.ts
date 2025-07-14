@@ -48,13 +48,13 @@ const unifiedQuery = `
 `;
 
 interface FetchTransfersOptions {
-  address: string;
+  addresses: string[];
   limit?: number;
   page?: string | null;
 }
 
 export async function fetchTransfers({
-  address,
+  addresses,
   limit = 100,
   page = null,
 }: FetchTransfersOptions): Promise<Transfer[]> {
@@ -62,7 +62,7 @@ export async function fetchTransfers({
     const body = JSON.stringify({
       query: unifiedQuery,
       variables: {
-        addresses: [address.toLowerCase()],
+        addresses,
         limit,
         ...(page && { page }),
       },

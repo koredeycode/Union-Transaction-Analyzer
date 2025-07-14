@@ -41,12 +41,12 @@ export default function App() {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [result, setResult] = useState<TransferAnalysisResult | null>(null);
-  const [wallet, setWallet] = useState<string>("");
+  const [wallets, setWallets] = useState<string[]>([]);
 
-  const handleAnalyze = (data: string) => {
+  const handleAnalyze = (...data: string[]) => {
     setShowResults(false);
     setModalOpen(true);
-    setWallet(data);
+    setWallets(data);
   };
 
   const handleShowResults = () => {
@@ -67,7 +67,7 @@ export default function App() {
       <Header />
       {!showResults && <MainForm onAnalyze={handleAnalyze} />}
       <footer className="text-center text-sm p-6 text-gray-500 dark:text-gray-400">
-        Built by{" "}
+        ©{" "}
         <a
           className="font-semibold text-[var(--accent)] hover:underline"
           href="https://twitter.com/intent/follow?screen_name=korefomo"
@@ -91,7 +91,7 @@ export default function App() {
             <AnalysisModal
               isOpen={isModalOpen}
               setIsOpen={setModalOpen}
-              walletAddress={wallet}
+              walletAddresses={wallets}
               onShowResult={handleShowResults}
               onSetResult={handleSetResult}
             />

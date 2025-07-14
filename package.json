@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cosmjs/amino": "^0.34.0",
+    "@cosmjs/encoding": "^0.34.0",
     "@tailwindcss/vite": "^4.1.11",
+    "@unionlabs/client": "^0.1.6",
+    "bech32": "^2.0.0",
     "dom-to-image-more": "^3.6.0",
     "html2canvas": "^1.4.1",
     "react": "^19.1.0",

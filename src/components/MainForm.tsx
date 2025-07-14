@@ -1,29 +1,43 @@
 import { useState, type FormEvent } from "react";
+// import {
+//   isValidBech32Address,
+//   isValidEvmAddress,
+//   bech32AddressToHex,
+// } from "@unionlabs/client";
+
+import {
+  toCanonical as bech32AddressToHex,
+  isValidCosmosAddress as isValidBech32Address,
+  isValidEvmAddress,
+} from "../lib/address";
 
 interface MainFormProps {
-  onAnalyze: (wallet: string) => void;
+  onAnalyze: (evmWallet: string, cosmosWallet: string) => void;
 }
 
 export default function MainForm({ onAnalyze }: MainFormProps) {
-  const [wallet, setWallet] = useState<string>("");
+  const [evmWallet, setEvmWallet] = useState<string>("");
+  const [cosmosWallet, setCosmosWallet] = useState<string>("");
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const isValidWallet = (address: string): boolean => {
-    // Simple EVM wallet validation (starts with 0x and 40 hex chars)
-    return /^0x[a-fA-F0-9]{40}$/.test(address.trim());
-  };
 
   const handleAnalyze = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!wallet || !isValidWallet(wallet)) {
-      setErrorMessage("Please enter a valid wallet address.");
+    if (!evmWallet || !isValidEvmAddress(evmWallet.trim())) {
+      setErrorMessage("Please enter a valid EVM wallet address.");
       setShowError(true);
       return;
     }
 
-    onAnalyze(wallet.trim());
+    if (!cosmosWallet || !isValidBech32Address(cosmosWallet.trim())) {
+      setErrorMessage("Please enter a valid Cosmos wallet address.");
+      setShowError(true);
+      return;
+    }
+
+    console.log(evmWallet.trim(), bech32AddressToHex(cosmosWallet.trim()));
+    onAnalyze(evmWallet.trim(), bech32AddressToHex(cosmosWallet.trim()));
   };
 
   return (
@@ -44,14 +58,27 @@ export default function MainForm({ onAnalyze }: MainFormProps) {
         <form className="flex flex-col gap-4" onSubmit={handleAnalyze}>
           <div className="relative">
             <input
-              value={wallet}
-              onChange={(e) => setWallet(e.target.value)}
-              placeholder="Enter your wallet address"
+              value={evmWallet}
+              onChange={(e) => setEvmWallet(e.target.value)}
+              placeholder="Enter your EVM wallet address"
               className={`w-full bg-[var(--input-bg)] border ${
                 showError
                   ? "border-red-500 animate-shake"
                   : "border-[var(--input-border)]"
               } rounded-xl px-5 py-4 text-center placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-color)] transition-all text-base text-[var(--text-primary)]`}
+              type="text"
+            />
+          </div>
+          <div className="relative">
+            <input
+              value={cosmosWallet}
+              onChange={(e) => setCosmosWallet(e.target.value)}
+              placeholder="Enter any of your cosmos wallet address"
+              className={`w-full bg-[var(--input-bg)] border ${
+                showError
+                  ? "border-red-500 animate-shake"
+                  : "border-[var(--input-border)]"
+              } rounded-xl px-5 py-4 text-center text-sm placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-color)] transition-all text-base text-[var(--text-primary)]`}
               type="text"
             />
           </div>
