@@ -8,9 +8,14 @@ const Header: React.FC = () => {
         <span className="material-icons-outlined text-3xl text-[var(--accent)]">
           data_usage
         </span>
-        <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-          ChainStory
-        </h1>
+        <div>
+          <h1 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+            Union Txs
+          </h1>
+          <h1 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+            Analyzer
+          </h1>
+        </div>
       </div>
       <div className="flex items-center gap-4">
         <ThemeToggle />
