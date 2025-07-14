@@ -59,6 +59,7 @@ export default function App() {
 
   const handleRestart = () => {
     setShowResults(false);
+    setModalOpen(false);
   };
 
   return (
