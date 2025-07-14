@@ -92,7 +92,7 @@ export default function AnalysisModal({
   return (
     <div className="p-8">
       <div className="animate-view-in">
-        <h3 className="text-2xl font-bold mb-6 text-[var(--text-primary)]">
+        <h3 className="md:text-xl text-lg font-bold mb-6 text-[var(--text-primary)]">
           Analyzing Transactions...
         </h3>
 

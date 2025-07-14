@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import html2canvas from "html2canvas";
 
 import BasicMetricsCard from "./cards/BasicMetricsCard";
@@ -18,8 +18,6 @@ interface CarouselProps {
 
 const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isAuto, setIsAuto] = useState<boolean>(true);
-  const intervalRef = useRef<any>(null);
 
   const slides = [
     <BasicMetricsCard
@@ -66,18 +64,8 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
     />,
   ];
 
-  useEffect(() => {
-    if (isAuto) {
-      intervalRef.current = setInterval(() => {
-        setCurrentIndex((i) => (i + 1 < slides.length ? i + 1 : i));
-      }, STORY_DURATION);
-    }
-    return () => intervalRef.current && clearInterval(intervalRef.current);
-  }, [isAuto, slides.length]);
-
   const showSlide = (index: number) => {
     setCurrentIndex(index);
-    setIsAuto(false);
   };
 
   const handleDownload = (index: number) => {
@@ -104,7 +92,7 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
   return (
     <div className="relative w-full max-w-4xl mx-auto px-4 animate-view-in p-6">
       <h3 className="text-3xl font-bold mb-2 text-center text-[var(--text-primary)]">
-        Your Chain Story
+        Your Union Story
       </h3>
 
       {/* Progress Indicators */}
