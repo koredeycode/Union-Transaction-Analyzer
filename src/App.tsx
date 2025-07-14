@@ -62,7 +62,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col max-h-screen">
       <Header />
       {!showResults && <MainForm onAnalyze={handleAnalyze} />}
       <footer className="text-center text-sm p-6 text-gray-500 dark:text-gray-400">
