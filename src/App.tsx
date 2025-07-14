@@ -62,14 +62,16 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col max-h-screen">
+    <div className="flex flex-col justify-even h-screen">
       <Header />
       {!showResults && <MainForm onAnalyze={handleAnalyze} />}
       <footer className="text-center text-sm p-6 text-gray-500 dark:text-gray-400">
         Built by{" "}
         <a
           className="font-semibold text-[var(--accent)] hover:underline"
-          href="#"
+          href="https://twitter.com/intent/follow?screen_name=korefomo"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           @korefomo
         </a>{" "}

@@ -14,11 +14,9 @@ const PopularRoutesCard: React.FC<Props> = ({ routes }) => {
   return (
     <div className="p-4 rounded-xl text-left glass-effect">
       <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
-        Popular Routes
+        Top Popular Routes
       </h4>
-      <p className="text-sm text-[var(--text-secondary)] mb-3">
-        Total: {routes.length} routes
-      </p>
+
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>

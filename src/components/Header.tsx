@@ -10,7 +10,7 @@ const Header: React.FC = () => {
         </span>
         <div>
           <h1 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
-            Union Txs
+            Union Txns
           </h1>
           <h1 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
             Analyzer

@@ -27,9 +27,6 @@ const TokenUsageCard: React.FC<Props> = ({ tokens, total }) => {
       <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
         Most Transferred Token
       </h4>
-      <p className="text-sm text-[var(--text-secondary)] mb-3">
-        Total: {tokens.length} tokens
-      </p>
       <div className="space-y-2 text-[var(--text-primary)]">
         {tokens.map((token, index) => (
           <div className="w-full" key={token.label}>

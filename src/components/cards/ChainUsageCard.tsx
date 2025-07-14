@@ -38,11 +38,9 @@ const ChainUsageCard: React.FC<Props> = ({
       <div className="grid grid-cols-1 gap-6 text-left">
         <div className="glass-effect p-4 rounded-xl">
           <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
-            Top Source Chains
+            Top 3 Source Chains
           </h4>
-          <p className="text-sm text-[var(--text-secondary)] mb-3">
-            Total: {sourceChains.length} chains
-          </p>
+
           <div className="space-y-2">
             {sourceChains.map((chain) =>
               renderBar(chain.label, chain.count, "bg-cyan-400")
@@ -51,11 +49,9 @@ const ChainUsageCard: React.FC<Props> = ({
         </div>
         <div className="glass-effect p-4 rounded-xl">
           <h4 className="text-lg font-semibold mb-1 text-[var(--text-primary)]">
-            Top Destination Chains
+            Top 3 Destination Chains
           </h4>
-          <p className="text-sm text-[var(--text-secondary)] mb-3">
-            Total: {destinationChains.length} chains
-          </p>
+
           <div className="space-y-2">
             {destinationChains.map((chain) =>
               renderBar(chain.label, chain.count, "bg-fuchsia-500")

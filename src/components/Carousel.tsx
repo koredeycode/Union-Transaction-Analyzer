@@ -8,6 +8,7 @@ import PopularRoutesCard from "./cards/PopularRoutesCard";
 import TokenUsageCard from "./cards/TokenUsageCard";
 import SummaryCard from "./cards/SummaryCard";
 import type { TransferAnalysisResult } from "../types";
+import FinalCard from "./cards/FinalCard";
 
 const STORY_DURATION = 5000;
 
@@ -61,6 +62,14 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
       topMonth={slideData.summary.topMonth}
       topRoute={slideData.summary.topRoute}
       topToken={slideData.summary.topToken}
+    />,
+    <FinalCard
+      total={slideData.summary.total}
+      uniqueChains={slideData.basic.uniqueChains}
+      topRoute={slideData.summary.topRoute}
+      topToken={slideData.summary.topToken}
+      days={slideData.basic.durationDays}
+      onRestart={onRestart}
     />,
   ];
 
@@ -166,7 +175,9 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
               designed by{" "}
               <a
                 className="font-semibold text-[var(--accent)] hover:underline"
-                href="#"
+                href="https://twitter.com/intent/follow?screen_name=korefomo"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 @korefomo
               </a>
@@ -176,14 +187,19 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
       </div>
 
       {/* Final Slide Actions */}
-      {currentIndex === slides.length - 1 && (
+      {/* {currentIndex === slides.length - 1 && (
         <div className="px-4 pb-6 pt-4">
           <button
             className="mb-4 w-full bg-slate-800 dark:bg-black hover:bg-slate-700 dark:hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
             onClick={() => {
+              const { total } = slideData.summary;
+              const { topRoute, topToken } = slideData.summary;
+              const days = slideData.basic.durationDays;
+
               const tweetText = encodeURIComponent(
-                "Check out my on-chain story from @Union_build! 🚀"
+                `My @union_build journey 🚀\n\n📊 ${total} txns over ${days} days\n🔁 Top Route: ${topRoute.source} → ${topRoute.destination}\n💎 Fav Token: ${topToken}\n\nCheck yours at union-transaction-analyzer.vercel.app\nBuilt by @korefomo`
               );
+
               const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
               window.open(tweetUrl, "_blank");
             }}
@@ -200,7 +216,7 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
             Analyze Another Wallet
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
