@@ -87,6 +87,7 @@ export default function App() {
             </button>
             <AnalysisModal
               isOpen={isModalOpen}
+              setIsOpen={setModalOpen}
               walletAddress={wallet}
               onShowResult={handleShowResults}
               onSetResult={handleSetResult}

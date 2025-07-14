@@ -189,7 +189,7 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
 
       {/* Final Slide Actions */}
       {currentIndex === slides.length - 1 && (
-        <div className="px-6 pb-6 pt-4">
+        <div className="px-4 pb-6 pt-4">
           <button
             className="mb-4 w-full bg-slate-800 dark:bg-black hover:bg-slate-700 dark:hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
             onClick={() => {

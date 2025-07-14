@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchTransfers } from "../lib/unionApi";
 import { analyzeTransfers } from "../lib/analyzeTransfers";
-import type { TransferAnalysisResult, Transfer } from "../types"; // ← define these
-// ← define these
+import type { TransferAnalysisResult, Transfer } from "../types";
 
 interface AnalysisModalProps {
   isOpen: boolean;
+  setIsOpen: (state: boolean) => void;
   walletAddress: string;
   onShowResult: () => void;
   onSetResult: (result: TransferAnalysisResult | null) => void;
@@ -13,14 +13,16 @@ interface AnalysisModalProps {
 
 export default function AnalysisModal({
   isOpen,
+  setIsOpen,
   walletAddress,
   onShowResult,
   onSetResult,
 }: AnalysisModalProps) {
-  const [transactionCount, setTransactionCount] = useState<number>(0);
+  const [transactionCount, setTransactionCount] = useState(0);
   const [phase, setPhase] = useState<"extracting" | "analyzing" | "done">(
     "extracting"
   );
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !walletAddress) return;
@@ -30,36 +32,47 @@ export default function AnalysisModal({
     async function fetchAndAnalyze() {
       setTransactionCount(0);
       setPhase("extracting");
+      setHasError(false);
 
       const transfers: Transfer[] = [];
       let page: string | null = null;
 
-      while (true) {
-        const batch = await fetchTransfers({
-          address: walletAddress,
-          limit: 100,
-          page,
-        });
+      try {
+        while (!cancelled) {
+          const batch = await fetchTransfers({
+            address: walletAddress,
+            limit: 100,
+            page,
+          });
+          if (!batch.length) break;
 
-        if (!batch.length) break;
-        transfers.push(...batch);
-        setTransactionCount(transfers.length);
+          transfers.push(...batch);
+          setTransactionCount(transfers.length);
 
-        const lastSortOrder = batch[batch.length - 1].sort_order;
-        if (!lastSortOrder || batch.length < 100) break;
-        page = lastSortOrder;
-      }
+          const lastSortOrder = batch[batch.length - 1].sort_order;
+          if (!lastSortOrder || batch.length < 100) break;
 
-      if (cancelled) return;
+          page = lastSortOrder;
+        }
 
-      setPhase("analyzing");
-
-      setTimeout(() => {
         if (cancelled) return;
-        const result = analyzeTransfers(transfers);
-        onSetResult(result);
-        setPhase("done");
-      }, 1500);
+
+        if (transfers.length === 0) {
+          setHasError(true);
+          return;
+        }
+
+        setPhase("analyzing");
+
+        setTimeout(() => {
+          const result = analyzeTransfers(transfers);
+          onSetResult(result);
+          setPhase("done");
+        }, 1500);
+      } catch (err) {
+        console.error("❌ Error during analysis:", err);
+        setHasError(true);
+      }
     }
 
     fetchAndAnalyze();
@@ -71,9 +84,7 @@ export default function AnalysisModal({
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isOpen);
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
+    return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -86,55 +97,44 @@ export default function AnalysisModal({
         </h3>
 
         <div className="space-y-6">
-          {/* Extraction */}
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 flex items-center justify-center">
-              {phase === "extracting" ? (
-                <div className="w-6 h-6 border-2 border-[var(--accent)] rounded-full border-t-transparent animate-spin-slow" />
-              ) : (
-                <span className="material-icons-outlined text-2xl text-green-400">
-                  check_circle
-                </span>
-              )}
-            </div>
-            <div className="flex-1 text-left">
-              <p className="text-[var(--text-primary)]">
-                Getting transactions - ({transactionCount} transactions found)
-              </p>
-            </div>
-          </div>
+          {/* Extracting */}
+          <StatusRow
+            phase={phase}
+            status="extracting"
+            label={`Getting transactions - (${transactionCount} found)`}
+            success={transactionCount > 0}
+            // showError={phase !== "extracting" && transactionCount === 0}
+            showError={hasError}
+          />
 
-          {/* Analysis */}
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 flex items-center justify-center">
-              {phase === "done" ? (
-                <span className="material-icons-outlined text-2xl text-green-400">
-                  check_circle
-                </span>
-              ) : (
-                <div
-                  className={`w-6 h-6 border-2 border-slate-500 rounded-full border-t-transparent ${
-                    phase === "analyzing" ? "animate-spin-slow" : "hidden"
-                  }`}
-                />
-              )}
-            </div>
-            <div className="flex-1 text-left">
-              <p
-                className={`${
-                  phase === "analyzing" || phase === "done"
-                    ? "text-[var(--text-primary)]"
-                    : "text-[var(--text-secondary)]"
-                }`}
-              >
-                {phase === "done" ? "Analysis Complete!" : "Analyzing results"}
-              </p>
-            </div>
-          </div>
+          {/* Analyzing */}
+          <StatusRow
+            phase={phase}
+            status="analyzing"
+            label={
+              phase === "done" && transactionCount === 0
+                ? "No transactions to analyze"
+                : "Analyzing results..."
+            }
+            success={phase === "done" && transactionCount > 0}
+            showError={hasError}
+          />
         </div>
 
-        {/* Done Actions */}
-        {phase === "done" && (
+        {/* Error */}
+        {hasError && (
+          <div className="mt-8 pt-6 border-t border-[var(--card-border)]">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-full bg-[var(--accent)] hover:opacity-90 text-[var(--accent-dark)] font-semibold py-4 px-4 rounded-xl shadow-lg shadow-[var(--accent)]/20 transition-all duration-300 transform hover:scale-105"
+            >
+              Restart Analysis
+            </button>
+          </div>
+        )}
+
+        {/* Done */}
+        {!hasError && phase === "done" && (
           <div className="mt-8 pt-6 border-t border-[var(--card-border)]">
             <button
               onClick={onShowResult}
@@ -144,6 +144,55 @@ export default function AnalysisModal({
             </button>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// Small reusable helper for cleaner render
+function StatusRow({
+  phase,
+  status,
+  label,
+  success,
+  showError = false,
+}: {
+  phase: string;
+  status: string;
+  label: string;
+  success: boolean;
+  showError?: boolean;
+}) {
+  const isCurrent = phase === status;
+
+  let icon = null;
+  if (isCurrent) {
+    // Still running → show spinner
+    icon = (
+      <div className="w-6 h-6 border-2 border-[var(--accent)] rounded-full border-t-transparent animate-spin-slow" />
+    );
+  } else if (success) {
+    // Completed successfully
+    icon = (
+      <span className="material-icons-outlined text-2xl text-green-400">
+        check_circle
+      </span>
+    );
+  }
+  if (showError) {
+    // Only show ❌ if explicitly told
+    icon = (
+      <span className="material-icons-outlined text-2xl text-red-400">
+        cancel
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center space-x-4">
+      <div className="w-8 h-8 flex items-center justify-center">{icon}</div>
+      <div className="flex-1 text-left">
+        <p className="text-[var(--text-primary)]">{label}</p>
       </div>
     </div>
   );

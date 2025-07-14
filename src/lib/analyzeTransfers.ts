@@ -4,6 +4,7 @@ export function analyzeTransfers(
   transfers: Transfer[]
 ): TransferAnalysisResult | null {
   if (!Array.isArray(transfers)) return null;
+  if (transfers.length < 1) return null;
 
   const basic = {
     totalTransactions: transfers.length,
