@@ -142,7 +142,7 @@ export default function AnalysisModal({
               Show Results
             </button>
             <p className="text-[var(--text-secondary)] mb-10 max-w-lg text-xs mt-2">
-              Note that this app tracks v2 transactions as at now.
+              Note that this app tracks only v2 transactions as at now.
             </p>
           </div>
         )}
