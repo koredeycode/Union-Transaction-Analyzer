@@ -3,6 +3,7 @@ import Carousel from "./components/Carousel";
 import Header from "./components/Header";
 import AnalysisModal from "./components/AnalysisModal";
 import MainForm from "./components/MainForm";
+import { Analytics } from "@vercel/analytics/react";
 
 // Define structure of your analysis result (update as needed)
 interface TransferAnalysisResult {
@@ -98,6 +99,7 @@ export default function App() {
           </div>
         </div>
       )}
+      <Analytics />
 
       {isModalOpen && showResults && result && (
         <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md flex justify-center items-center p-2 z-50 overflow-y-auto max-h-screen">
