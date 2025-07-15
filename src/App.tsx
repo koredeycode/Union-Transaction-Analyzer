@@ -4,39 +4,7 @@ import Header from "./components/Header";
 import AnalysisModal from "./components/AnalysisModal";
 import MainForm from "./components/MainForm";
 import { Analytics } from "@vercel/analytics/react";
-
-// Define structure of your analysis result (update as needed)
-interface TransferAnalysisResult {
-  basic: {
-    total: number;
-    uniqueChains: number;
-    durationDays: number;
-    timeRange: {
-      from: string;
-      to: string;
-    };
-    completed: number;
-    pending: number;
-  };
-  temporal: {
-    weekdayData: { label: string; count: number }[];
-    monthlyData: { label: string; count: number }[];
-  };
-  chains: {
-    topSource: { label: string; count: number }[];
-    topDestination: { label: string; count: number }[];
-  };
-  routes: { source: string; destination: string; count: number }[];
-  tokens: { label: string; count: number }[];
-  summary: {
-    total: number;
-    uniqueChains: number;
-    topDay: string;
-    topMonth: string;
-    topRoute: { source: string; destination: string };
-    topToken: string;
-  };
-}
+import type { TransferAnalysisResult } from "./types";
 
 export default function App() {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);

@@ -34,7 +34,8 @@ const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
         ).toDateString()}`,
       }}
       success={slideData.basic.completed}
-      failed={slideData.basic.pending}
+      pending={slideData.basic.pending}
+      failed={slideData.basic.failed}
     />,
     <TemporalActivityCard
       key="temporal"

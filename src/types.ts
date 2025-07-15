@@ -1,4 +1,5 @@
 export interface Transfer {
+  success: boolean | null;
   source_chain: { display_name: string; universal_chain_id: string };
   destination_chain: { display_name: string; universal_chain_id: string };
   transfer_send_timestamp: string;
@@ -19,6 +20,7 @@ export interface TransferAnalysisResult {
     timeRange: { from: string; to: string };
     completed: number;
     pending: number;
+    failed: number;
   };
   temporal: {
     weekdayData: { label: string; count: number }[];

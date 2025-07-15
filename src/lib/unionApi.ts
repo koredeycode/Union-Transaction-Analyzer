@@ -19,6 +19,7 @@ const unifiedQuery = `
         p_sort_order: $page
       }
     ) {
+      success
       source_chain {
         universal_chain_id
         logo_uri
@@ -30,7 +31,9 @@ const unifiedQuery = `
         display_name
       }
       sender_canonical
+      sender_display
       receiver_canonical
+      receiver_display
       transfer_send_timestamp
       transfer_send_transaction_hash
       transfer_recv_timestamp

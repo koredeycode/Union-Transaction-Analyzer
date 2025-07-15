@@ -10,6 +10,7 @@ type Props = {
   uniqueChains: number;
   duration: Duration;
   success: number;
+  pending: number;
   failed: number;
 };
 
@@ -18,9 +19,10 @@ const BasicMetricsCard: React.FC<Props> = ({
   uniqueChains,
   duration,
   success,
+  pending,
   failed,
 }) => {
-  const successPercent = Math.round((success / (success + failed)) * 100);
+  // const successPercent = Math.round((success / (success + failed)) * 100);
 
   return (
     <div>
@@ -53,6 +55,7 @@ const BasicMetricsCard: React.FC<Props> = ({
             {duration.range}
           </p>
         </div>
+
         <div className="glass-effect p-4 rounded-xl col-span-2">
           <p className="text-sm text-[var(--text-secondary)] mb-2">
             Transaction Status
@@ -63,34 +66,54 @@ const BasicMetricsCard: React.FC<Props> = ({
                 className="w-full h-full transform -rotate-90"
                 viewBox="0 0 36 36"
               >
+                {/* Failed */}
                 <circle
                   className="stroke-current text-red-500"
                   cx="18"
                   cy="18"
                   fill="transparent"
                   r="15.9155"
-                  strokeDasharray={`${100 - successPercent}, 100`}
-                  strokeDashoffset={`-${successPercent}`}
+                  strokeDasharray={`${(failed / total) * 100}, 100`}
+                  strokeDashoffset="0"
                   strokeWidth="3"
                 />
+                {/* Pending */}
+                <circle
+                  className="stroke-current text-yellow-500"
+                  cx="18"
+                  cy="18"
+                  fill="transparent"
+                  r="15.9155"
+                  strokeDasharray={`${(pending / total) * 100}, 100`}
+                  strokeDashoffset={`-${(failed / total) * 100}`}
+                  strokeWidth="3"
+                />
+                {/* Success */}
                 <circle
                   className="stroke-current text-[var(--accent)]"
                   cx="18"
                   cy="18"
                   fill="transparent"
                   r="15.9155"
-                  strokeDasharray={`${successPercent}, 100`}
+                  strokeDasharray={`${(success / total) * 100}, 100`}
+                  strokeDashoffset={`-${
+                    (failed / total + pending / total) * 100
+                  }`}
                   strokeWidth="3"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center text-lg font-bold text-[var(--accent)]">
-                {successPercent}%
+                {Math.round((success / total) * 100)}%
               </div>
             </div>
             <div className="text-sm space-y-2 text-[var(--text-primary)]">
               <p className="flex items-center">
                 <span className="w-3 h-3 rounded-full bg-[var(--accent)] mr-2"></span>
                 Success ({success})
+              </p>
+              <p className="flex items-center">
+                <span className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>
+                Pending ({pending})
               </p>
               <p className="flex items-center">
                 <span className="w-3 h-3 rounded-full bg-red-500 mr-2"></span>

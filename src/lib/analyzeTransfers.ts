@@ -10,7 +10,7 @@ export function analyzeTransfers(
     totalTransactions: transfers.length,
     uniqueChains: new Set<string>(),
     timestamps: [] as Date[],
-    statusCounts: { completed: 0, pending: 0 },
+    statusCounts: { completed: 0, pending: 0, failed: 0 },
   };
 
   const weekdayActivity: Record<string, number> = {
@@ -59,8 +59,15 @@ export function analyzeTransfers(
     const routeKey = `${srcLabel} → ${dstLabel}`;
     routes[routeKey] = (routes[routeKey] || 0) + 1;
 
-    if (tx.transfer_recv_timestamp) basic.statusCounts.completed++;
-    else basic.statusCounts.pending++;
+    if (tx.success === true) {
+      basic.statusCounts.completed++;
+    } else if (tx.success === false) {
+      basic.statusCounts.failed++;
+    } else {
+      basic.statusCounts.pending++;
+    }
+    // if (tx.transfer_recv_timestamp) basic.statusCounts.completed++;
+    // else basic.statusCounts.pending++;
 
     let symbol = tx.base_token_symbol || tx.base_token;
     if (symbol.length > 20) {
@@ -124,6 +131,7 @@ export function analyzeTransfers(
       },
       completed: basic.statusCounts.completed,
       pending: basic.statusCounts.pending,
+      failed: basic.statusCounts.failed,
     },
     temporal: {
       weekdayData: Object.entries(weekdayActivity).map(([label, count]) => ({
