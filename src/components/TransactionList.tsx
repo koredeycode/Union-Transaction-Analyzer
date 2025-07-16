@@ -754,7 +754,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
             }}
           >
             {/* <span className="material-icons-outlined text-base">analytics</span> */}
-            Quick Analyse
+            Quick Analysis
           </button>
         </div>
       </div>
