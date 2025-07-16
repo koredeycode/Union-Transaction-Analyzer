@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { fetchTransfers } from "../lib/unionApi";
 import { analyzeTransfers } from "../lib/analyzeTransfers";
-import type { TransferAnalysisResult, Transfer } from "../types";
+import type { Transfer, TransferAnalysisResult } from "../types";
 
 interface AnalysisModalProps {
   isOpen: boolean;
   setIsOpen: (state: boolean) => void;
   walletAddresses: string[];
   onShowResult: () => void;
-  onSetResult: (result: TransferAnalysisResult | null) => void;
+  onSetResult: (
+    transfers: Transfer[],
+    analysis: TransferAnalysisResult | null
+  ) => void;
+  isHome: boolean;
 }
 
 export default function AnalysisModal({
@@ -17,11 +21,12 @@ export default function AnalysisModal({
   walletAddresses,
   onShowResult,
   onSetResult,
+  isHome,
 }: AnalysisModalProps) {
   const [transactionCount, setTransactionCount] = useState(0);
-  const [phase, setPhase] = useState<"extracting" | "analyzing" | "done">(
-    "extracting"
-  );
+  const [phase, setPhase] = useState<
+    "extracting" | "analyzing" | "viewing" | "done"
+  >("extracting");
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -29,12 +34,13 @@ export default function AnalysisModal({
 
     let cancelled = false;
 
-    async function fetchAndAnalyze() {
+    async function fetchAndAnalyzeOrView() {
       setTransactionCount(0);
       setPhase("extracting");
       setHasError(false);
 
       const transfers: Transfer[] = [];
+      // const analysis = {} as TransferAnalysisResult;
       let page: string | null = null;
 
       try {
@@ -62,20 +68,23 @@ export default function AnalysisModal({
           return;
         }
 
-        setPhase("analyzing");
-
-        setTimeout(() => {
-          const result = analyzeTransfers(transfers);
-          onSetResult(result);
+        const analysis = analyzeTransfers(transfers);
+        if (isHome) {
+          setPhase("analyzing");
+          onSetResult(transfers, analysis);
           setPhase("done");
-        }, 1500);
+        } else {
+          setPhase("viewing");
+          onSetResult(transfers, analysis);
+          setPhase("done");
+        }
       } catch (err) {
         console.error("Error during analysis:", err);
         setHasError(true);
       }
     }
 
-    fetchAndAnalyze();
+    fetchAndAnalyzeOrView();
 
     return () => {
       cancelled = true;
@@ -93,7 +102,7 @@ export default function AnalysisModal({
     <div className="p-8">
       <div className="animate-view-in">
         <h3 className="md:text-xl text-lg font-bold mb-6 text-[var(--text-primary)]">
-          Analyzing Transactions...
+          {isHome ? "Analysing" : "Viewing"} Transactions...
         </h3>
 
         <div className="space-y-6">
@@ -107,17 +116,31 @@ export default function AnalysisModal({
           />
 
           {/* Analyzing */}
-          <StatusRow
-            phase={phase}
-            status="analyzing"
-            label={
-              phase === "done" && transactionCount === 0
-                ? "No transactions to analyze"
-                : "Analyzing results..."
-            }
-            success={phase === "done" && transactionCount > 0}
-            showError={hasError}
-          />
+          {isHome ? (
+            <StatusRow
+              phase={phase}
+              status="analyzing"
+              label={
+                phase === "done" && transactionCount === 0
+                  ? "No transactions to analyze"
+                  : "Analyzing results..."
+              }
+              success={phase === "done" && transactionCount > 0}
+              showError={hasError}
+            />
+          ) : (
+            <StatusRow
+              phase={phase}
+              status="viewing"
+              label={
+                phase === "done" && transactionCount === 0
+                  ? "No transactions to view"
+                  : "Viewing results..."
+              }
+              success={phase === "done" && transactionCount > 0}
+              showError={hasError}
+            />
+          )}
         </div>
 
         {/* Error */}
@@ -127,7 +150,7 @@ export default function AnalysisModal({
               onClick={() => setIsOpen(false)}
               className="w-full bg-[var(--accent)] hover:opacity-90 text-[var(--accent-dark)] font-semibold py-4 px-4 rounded-xl shadow-lg shadow-[var(--accent)]/20 transition-all duration-300 transform hover:scale-105"
             >
-              Restart Analysis
+              Restart {isHome ? "Analysis" : "View"}
             </button>
           </div>
         )}
@@ -139,7 +162,7 @@ export default function AnalysisModal({
               onClick={onShowResult}
               className="w-full bg-[var(--accent)] hover:opacity-90 text-[var(--accent-dark)] font-semibold py-4 px-4 rounded-xl shadow-lg shadow-[var(--accent)]/20 transition-all duration-300 transform hover:scale-105"
             >
-              Show Results
+              {isHome ? "Show Analysis" : "View Transactions"}
             </button>
             <p className="text-[var(--text-secondary)] mb-10 max-w-lg text-xs mt-2">
               Note that this app tracks only v2 transactions as at now.

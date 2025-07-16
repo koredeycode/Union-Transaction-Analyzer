@@ -13,13 +13,16 @@ import {
 
 interface MainFormProps {
   onAnalyze: (evmWallet: string, cosmosWallet: string) => void;
+  isHome: boolean;
 }
 
-export default function MainForm({ onAnalyze }: MainFormProps) {
+export default function MainForm({ onAnalyze, isHome = true }: MainFormProps) {
   const [evmWallet, setEvmWallet] = useState<string>("");
   const [cosmosWallet, setCosmosWallet] = useState<string>("");
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const verb = isHome ? "Analyze" : "View";
 
   const handleAnalyze = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,10 +56,11 @@ export default function MainForm({ onAnalyze }: MainFormProps) {
       </div>
 
       <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-5 text-[var(--text-primary)]">
-        Analyze Your Union Transactions
+        {verb} Your Union Transactions
       </h2>
       <p className="text-[var(--text-secondary)] mb-10 max-w-lg text-sm md:text-lg">
-        Enter your wallet address to fetch and analyse your transactions.
+        Enter your wallet address(es) to fetch and {verb.toLowerCase()} your
+        transactions.
       </p>
 
       <div className="w-full max-w-md">
@@ -91,7 +95,7 @@ export default function MainForm({ onAnalyze }: MainFormProps) {
             type="submit"
             className="w-full bg-[var(--accent)] hover:opacity-90 text-[var(--accent-dark)] font-semibold py-4 px-4 rounded-xl shadow-lg shadow-[var(--accent)]/20 transition-all duration-300 transform hover:scale-105"
           >
-            Analyze
+            {verb} Transactions
           </button>
         </form>
       </div>

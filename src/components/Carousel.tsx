@@ -7,69 +7,69 @@ import ChainUsageCard from "./cards/ChainUsageCard";
 import PopularRoutesCard from "./cards/PopularRoutesCard";
 import TokenUsageCard from "./cards/TokenUsageCard";
 import SummaryCard from "./cards/SummaryCard";
-import type { TransferAnalysisResult } from "../types";
 import FinalCard from "./cards/FinalCard";
+import type { TransferAnalysisResult } from "../types";
 
 // const STORY_DURATION = 5000;
 
 interface CarouselProps {
-  slideData: TransferAnalysisResult;
+  analysis: TransferAnalysisResult;
   onRestart: () => void;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ slideData, onRestart }) => {
+const Carousel: React.FC<CarouselProps> = ({ analysis, onRestart }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const slides = [
     <BasicMetricsCard
       key="basic"
-      total={slideData.basic.total}
-      uniqueChains={slideData.basic.uniqueChains}
+      total={analysis.basic.total}
+      uniqueChains={analysis.basic.uniqueChains}
       duration={{
-        label: `${slideData.basic.durationDays} days`,
+        label: `${analysis.basic.durationDays} days`,
         range: `${new Date(
-          slideData.basic.timeRange.from
+          analysis.basic.timeRange.from
         ).toDateString()} - ${new Date(
-          slideData.basic.timeRange.to
+          analysis.basic.timeRange.to
         ).toDateString()}`,
       }}
-      success={slideData.basic.completed}
-      pending={slideData.basic.pending}
-      failed={slideData.basic.failed}
+      success={analysis.basic.completed}
+      pending={analysis.basic.pending}
+      failed={analysis.basic.failed}
     />,
     <TemporalActivityCard
       key="temporal"
-      weekdayData={slideData.temporal.weekdayData}
-      monthlyData={slideData.temporal.monthlyData}
-      total={slideData.basic.total}
+      weekdayData={analysis.temporal.weekdayData}
+      monthlyData={analysis.temporal.monthlyData}
+      total={analysis.basic.total}
     />,
     <ChainUsageCard
       key="chains"
-      sourceChains={slideData.chains.topSource}
-      destinationChains={slideData.chains.topDestination}
-      total={slideData.basic.total}
+      sourceChains={analysis.chains.topSource}
+      destinationChains={analysis.chains.topDestination}
+      total={analysis.basic.total}
     />,
-    <PopularRoutesCard key="routes" routes={slideData.routes} />,
+    <PopularRoutesCard key="routes" routes={analysis.routes} />,
     <TokenUsageCard
       key="tokens"
-      tokens={slideData.tokens}
-      total={slideData.basic.total}
+      tokens={analysis.tokens}
+      total={analysis.basic.total}
     />,
     <SummaryCard
       key="summary"
-      total={slideData.summary.total}
-      uniqueChains={slideData.summary.uniqueChains}
-      topDay={slideData.summary.topDay}
-      topMonth={slideData.summary.topMonth}
-      topRoute={slideData.summary.topRoute}
-      topToken={slideData.summary.topToken}
+      total={analysis.summary.total}
+      uniqueChains={analysis.summary.uniqueChains}
+      topDay={analysis.summary.topDay}
+      topMonth={analysis.summary.topMonth}
+      topRoute={analysis.summary.topRoute}
+      topToken={analysis.summary.topToken}
     />,
     <FinalCard
-      total={slideData.summary.total}
-      uniqueChains={slideData.basic.uniqueChains}
-      topRoute={slideData.summary.topRoute}
-      topToken={slideData.summary.topToken}
-      days={slideData.basic.durationDays}
+      total={analysis.summary.total}
+      uniqueChains={analysis.basic.uniqueChains}
+      topRoute={analysis.summary.topRoute}
+      topToken={analysis.summary.topToken}
+      days={analysis.basic.durationDays}
       onRestart={onRestart}
     />,
   ];

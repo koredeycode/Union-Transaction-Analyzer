@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 
 sample.json
+sample.txt
 
 package-lock.json

@@ -10,6 +10,12 @@ export interface Transfer {
   base_token_symbol?: string;
   base_token_decimals?: number;
   base_amount: string;
+  quote_amount: number;
+
+  sender_canonical: string;
+  sender_display: string;
+  receiver_canonical: string;
+  receiver_display: string;
 }
 
 export interface TransferAnalysisResult {
