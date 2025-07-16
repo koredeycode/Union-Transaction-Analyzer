@@ -42,18 +42,6 @@ export default function Home() {
     <div className="flex flex-col justify-even h-screen">
       <Header />
       {!showResults && <MainForm onAnalyze={handleAnalyze} isHome={true} />}
-      <footer className="text-center text-sm mb-4 p-6 text-gray-500 dark:text-gray-400">
-        ©{" "}
-        <a
-          className="font-semibold text-[var(--accent)] hover:underline"
-          href="https://twitter.com/intent/follow?screen_name=korefomo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          @korefomo
-        </a>{" "}
-        2025
-      </footer>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md flex justify-center items-center p-2 z-50 overflow-y-auto p-4">
