@@ -508,7 +508,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
       destinationChain: "All Destinations",
       status: "All Statuses",
     });
-    applyFilters();
+    setFilteredTransfers(transfers);
   }
 
   function applyFilters() {
