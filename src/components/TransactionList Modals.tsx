@@ -3,21 +3,19 @@ import {
   formatReadableUTC,
   formatTxAmount,
   getTxStatus,
-  timeAgo,
 } from "../lib/utils";
 import type { Transfer, TransferAnalysisResult } from "../types";
-import { createPortal } from "react-dom";
 
 export const TransactionDetails = ({
   tx,
-
+  // isOpen,
   setIsOpen,
 }: {
   tx: Transfer;
   isOpen: boolean;
   setIsOpen: (state: boolean) => void;
 }) => {
-  return createPortal(
+  return (
     <div
       className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md flex flex-col justify-start items-center z-50 p-2 md:p-8"
       id="transaction-detail-modal"
@@ -166,8 +164,7 @@ export const TransactionDetails = ({
           </a>
         </p>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
 
@@ -180,8 +177,7 @@ export const QuickAnalysisModal = ({
   setIsOpen: (state: boolean) => void;
 }) => {
   return (
-    quickAnalysis &&
-    createPortal(
+    quickAnalysis && (
       <div
         className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md flex flex-col justify-start items-center z-50 p-3 md:p-8 overflow-y-auto"
         id="analysis-modal"
@@ -285,8 +281,7 @@ export const QuickAnalysisModal = ({
             </button>
           </div>
         </div>
-      </div>,
-      document.body
+      </div>
     )
   );
 };

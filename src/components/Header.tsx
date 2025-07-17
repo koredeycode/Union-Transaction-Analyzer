@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const currentPath = location.pathname;
 
   const navLinks = [
-    { name: "Analyse", to: "/" },
+    { name: "Analyze", to: "/" },
     { name: "View", to: "/transactions" },
   ];
 
