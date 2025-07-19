@@ -63,17 +63,19 @@ const TransactionList: React.FC<TransactionListProps> = ({
   }
 
   function applyFilters() {
-    // const { startDate, endDate } = filters;
+     const { startDate, endDate } = filters;
 
-    // if (startDate && endDate) {
-    //   const start = new Date(startDate);
-    //   const end = new Date(endDate);
+     if (startDate && endDate) {
+       const start = new Date(startDate);
+       const end = new Date(endDate);
 
-    //   if (start >= end) {
-    //     alert("Start date must be earlier than end date.");
-    //     return;
-    //   }
-    // }
+       if (start > end) {
+         alert("Start date must be earlier than end date.");
+         return;
+       } else if (start === end) {
+         filters.endDate = "";
+       }
+     }
 
     let result = [...transfers];
 
