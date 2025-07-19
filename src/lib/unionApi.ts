@@ -55,7 +55,7 @@ interface FetchTransfersOptions {
   addresses: string[];
   limit?: number;
   page?: string | null;
-  compare: "lt" | "gt";
+  compare?: "lt" | "gt";
 }
 
 export async function fetchTransfers({

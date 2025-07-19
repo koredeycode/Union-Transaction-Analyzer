@@ -46,6 +46,8 @@ export default function MainForm({ onAnalyze, isHome = true }: MainFormProps) {
     }
 
     onAnalyze(evmWallet.trim(), bech32AddressToHex(cosmosWallet.trim()));
+    setEvmWallet(evmWallet);
+    setCosmosWallet(cosmosWallet);
   };
 
   return (
