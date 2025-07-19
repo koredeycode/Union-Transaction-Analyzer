@@ -2,11 +2,12 @@
 import { useEffect, useState } from "react";
 import type { Transfer, TransferAnalysisResult } from "../types";
 import { analyzeTransfers } from "../lib/analyzeTransfers";
+import { fetchTransfers } from "../lib/unionApi";
 import { chains, getTxStatus } from "../lib/utils";
 import {
   QuickAnalysisModal,
   TransactionDetails,
-} from "./TransactionList Modals";
+} from "./TransactionListModals";
 import Transaction from "./Transaction";
 // import html2canvas from "html2canvas";
 
@@ -14,19 +15,25 @@ import Transaction from "./Transaction";
 
 interface TransactionListProps {
   transfers: Transfer[];
+  setTransfers: (txs: Transfer[]) => void;
   analysis: TransferAnalysisResult | null;
+  wallets: string[];
   setIsInnerOpen: (state: boolean) => void;
 }
 
 const TransactionList: React.FC<TransactionListProps> = ({
   transfers,
+  setTransfers,
   analysis,
+  wallets,
   setIsInnerOpen,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const [isQAModalOpen, setIsQAModalOpen] = useState(false);
   const [isTDModalOPen, setIsTDModalOpen] = useState(false);
@@ -56,17 +63,17 @@ const TransactionList: React.FC<TransactionListProps> = ({
   }
 
   function applyFilters() {
-    const { startDate, endDate } = filters;
+    // const { startDate, endDate } = filters;
 
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
+    // if (startDate && endDate) {
+    //   const start = new Date(startDate);
+    //   const end = new Date(endDate);
 
-      if (start >= end) {
-        alert("Start date must be earlier than end date.");
-        return;
-      }
-    }
+    //   if (start >= end) {
+    //     alert("Start date must be earlier than end date.");
+    //     return;
+    //   }
+    // }
 
     let result = [...transfers];
 
@@ -113,6 +120,24 @@ const TransactionList: React.FC<TransactionListProps> = ({
     setFilteredTransfers(result);
   }
 
+  async function refreshTransfers() {
+    try {
+      setIsRefreshing(true);
+      const freshTransfers = await fetchTransfers({
+        addresses: wallets,
+        limit: 100,
+        page: transfers[0].sort_order,
+        compare: "gt",
+      });
+      setTransfers([...freshTransfers, ...transfers]);
+    } catch (error) {
+      console.error("Failed to refresh transfers:", error);
+      alert("Unable to refresh transactions.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  }
+
   useEffect(() => {
     setFilteredTransfers([...transfers]);
   }, [transfers]);
@@ -130,7 +155,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
       <div className="glass-effect rounded-lg mb-6 transition-all duration-300 ease-in-out">
         <button
           onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className="flex justify-between items-center w-full p-4 text-left"
+          className="flex justify-between items-center w-full p-2 md:p-4 text-left"
         >
           <span className="font-medium text-[var(--text-primary)]">
             Filters
@@ -286,7 +311,20 @@ const TransactionList: React.FC<TransactionListProps> = ({
           setIsOpen={setIsTDModalOpen}
         />
       )}
-      <div className="flex justify-end mb-2">
+      <div className="flex justify-between mb-2">
+        <div>
+          <button
+            className="glass-effect hover:bg-[rgba(255,255,255,0.1)] text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-sm"
+            onClick={refreshTransfers}
+            disabled={isRefreshing}
+          >
+            {isRefreshing ? (
+              <div className="w-6 h-6 border-2 border-[var(--accent)] rounded-full border-t-transparent animate-spin-slow" />
+            ) : (
+              <span className="material-icons-outlined">refresh</span>
+            )}
+          </button>
+        </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-[var(--text-secondary)]">
             {filteredTransfers.length} Txs

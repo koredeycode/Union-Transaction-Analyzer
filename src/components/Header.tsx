@@ -7,29 +7,29 @@ const Header: React.FC = () => {
   const currentPath = location.pathname;
 
   const navLinks = [
-    { name: "Analyze", to: "/" },
-    { name: "View", to: "/transactions" },
+    { name: "Analyze Txs", to: "/" },
+    { name: "View Txs", to: "/transactions" },
   ];
 
   return (
-    <header className="flex justify-between items-center p-6 border-b border-[var(--card-border)]">
+    <header className="flex justify-between items-center p-4 md:p-6 border-b border-[var(--card-border)]">
       {/* Logo section links to home */}
       <NavLink to="/" className="flex items-center gap-2 group">
         <span className="material-icons-outlined text-xl text-[var(--accent)] transition-transform group-hover:rotate-12">
           data_usage
         </span>
         <div>
-          <h1 className="text-sm md:text-lg font-bold tracking-tight text-[var(--text-primary)] leading-tight">
+          <h1 className="text-xs md:text-lg font-bold tracking-tight text-[var(--text-primary)] leading-tight">
             Union Txns
           </h1>
-          <h1 className="text-sm md:text-lg font-bold tracking-tight text-[var(--text-primary)] leading-tight">
+          <h1 className="text-xs md:text-lg font-bold tracking-tight text-[var(--text-primary)] leading-tight">
             Analyzer
           </h1>
         </div>
       </NavLink>
 
       {/* Navigation + Theme */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 ">
         <nav className="flex items-center gap-4">
           {navLinks.map(({ name, to }) => (
             <NavLink

@@ -134,8 +134,10 @@ export function formatReadableUTC(datetimeString: string) {
   const year = date.getUTCFullYear();
 
   const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
   const ampm = hours >= 12 ? "pm" : "am";
   const hour12 = hours % 12 || 12;
+  const paddedMinutes = minutes.toString().padStart(2, "0");
 
-  return `${weekday}, ${day} ${month} ${year}, ${hour12}${ampm} UTC`;
+  return `${weekday}, ${day} ${month} ${year}, ${hour12}:${paddedMinutes} ${ampm} UTC`;
 }

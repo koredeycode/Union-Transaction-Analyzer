@@ -95,7 +95,9 @@ export default function TransactionsPage() {
             <TransactionList
               setIsInnerOpen={setisInnerModalOpen}
               transfers={transfers}
+              setTransfers={setTransfers}
               analysis={analysis}
+              wallets={wallets}
             />
             {/* <Carousel slideData={result} onRestart={handleRestart} /> */}
           </div>

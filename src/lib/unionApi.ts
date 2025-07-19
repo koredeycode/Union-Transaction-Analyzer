@@ -11,12 +11,13 @@ const headers = {
 };
 
 const unifiedQuery = `
-  query FetchTransfers($addresses: jsonb, $limit: Int!, $page: String) {
+  query FetchTransfers($addresses: jsonb, $limit: Int!, $page: String, $compare: ComparisonOp) {
     v2_transfers(
       args: {
         p_limit: $limit
         p_addresses_canonical: $addresses
         p_sort_order: $page
+        p_comparison: $compare
       }
     ) {
       success
@@ -54,21 +55,28 @@ interface FetchTransfersOptions {
   addresses: string[];
   limit?: number;
   page?: string | null;
+  compare: "lt" | "gt";
 }
 
 export async function fetchTransfers({
   addresses,
   limit = 100,
   page = null,
+  compare = "lt",
 }: FetchTransfersOptions): Promise<Transfer[]> {
+  const variables: Record<string, any> = {
+    addresses,
+    limit,
+    compare,
+  };
+
+  if (page) variables.page = page;
+  // if (compare !== null && compare !== undefined) variables.compare = compare;
+  console.log(variables);
   try {
     const body = JSON.stringify({
       query: unifiedQuery,
-      variables: {
-        addresses,
-        limit,
-        ...(page && { page }),
-      },
+      variables,
       operationName: "FetchTransfers",
     });
 

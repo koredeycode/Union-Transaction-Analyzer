@@ -221,11 +221,24 @@ export const QuickAnalysisModal = ({
                   </div>
                 </div>
                 <div className="glass-effect p-3 rounded-lg">
-                  <p className="text-sm text-[var(--text-secondary)] mb-1">
+                  {/* <p className="text-sm text-[var(--text-secondary)] mb-1">
                     Duration
                   </p>
                   <p className="text-xl font-bold text-[var(--text-primary)]">
                     {quickAnalysis.basic.durationDays} days
+                  </p> */}
+                  <p className="text-sm text-[var(--text-secondary)]">
+                    Duration{" "}
+                    <span className="text-xs text-[var(--text-tertiary)]">
+                      ({quickAnalysis.basic.durationDays}) days
+                    </span>
+                  </p>
+                  <p className="md:text-lg text-sm font-bold text-[var(--text-primary)]">
+                    {`${new Date(
+                      quickAnalysis.basic.timeRange.from
+                    ).toDateString()} - ${new Date(
+                      quickAnalysis.basic.timeRange.to
+                    ).toDateString()}`}
                   </p>
                 </div>
                 <div className="glass-effect p-3 rounded-lg">
