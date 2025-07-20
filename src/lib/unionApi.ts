@@ -72,7 +72,7 @@ export async function fetchTransfers({
 
   if (page) variables.page = page;
   // if (compare !== null && compare !== undefined) variables.compare = compare;
-  console.log(variables);
+  // console.log(variables);
   try {
     const body = JSON.stringify({
       query: unifiedQuery,

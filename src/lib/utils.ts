@@ -141,3 +141,15 @@ export function formatReadableUTC(datetimeString: string) {
 
   return `${weekday}, ${day} ${month} ${year}, ${hour12}:${paddedMinutes} ${ampm} UTC`;
 }
+
+export function getNextDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() + 1);
+  return date.toISOString().split("T")[0];
+}
+
+export function getPrevDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() - 1);
+  return date.toISOString().split("T")[0];
+}

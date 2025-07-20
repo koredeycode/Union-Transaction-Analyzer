@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Transfer, TransferAnalysisResult } from "../types";
 import { analyzeTransfers } from "../lib/analyzeTransfers";
 import { fetchTransfers } from "../lib/unionApi";
-import { chains, getTxStatus } from "../lib/utils";
+import { chains, getTxStatus, getNextDate, getPrevDate } from "../lib/utils";
 import {
   QuickAnalysisModal,
   TransactionDetails,
@@ -63,19 +63,20 @@ const TransactionList: React.FC<TransactionListProps> = ({
   }
 
   function applyFilters() {
-     const { startDate, endDate } = filters;
+    // console.log("applying filters");
+    // const { startDate, endDate } = filters;
 
-     if (startDate && endDate) {
-       const start = new Date(startDate);
-       const end = new Date(endDate);
+    // if (startDate && endDate) {
+    //   const start = new Date(startDate);
+    //   const end = new Date(endDate);
 
-       if (start > end) {
-         alert("Start date must be earlier than end date.");
-         return;
-       } else if (start === end) {
-         filters.endDate = "";
-       }
-     }
+    //   if (start > end) {
+    //     alert("Start date must be earlier than end date.");
+    //     return;
+    //   } else if (start === end) {
+    //     filters.endDate = "";
+    //   }
+    // }
 
     let result = [...transfers];
 
@@ -120,11 +121,13 @@ const TransactionList: React.FC<TransactionListProps> = ({
     }
 
     setFilteredTransfers(result);
+    setIsFilterOpen(false);
   }
 
   async function refreshTransfers() {
     try {
       setIsRefreshing(true);
+      // TODO: take care of cases where the new transfers are more than 100
       const freshTransfers = await fetchTransfers({
         addresses: wallets,
         limit: 100,
@@ -141,7 +144,8 @@ const TransactionList: React.FC<TransactionListProps> = ({
   }
 
   useEffect(() => {
-    setFilteredTransfers([...transfers]);
+    // setFilteredTransfers([...transfers]);
+    applyFilters();
   }, [transfers]);
 
   useEffect(() => {
@@ -150,153 +154,170 @@ const TransactionList: React.FC<TransactionListProps> = ({
 
   return (
     <div className=" w-full max-w-4xl mx-auto px-4 animate-view-in p-4">
-      <h3 className="text-2xl font-bold text-left text-[var(--text-primary)] mb-2">
-        Transaction History
-      </h3>
+      <div className="relative flex mb-4 mt-2">
+        <h3 className="text-lg md:text-2xl font-bold text-left text-[var(--text-primary)] mb-2">
+          Transaction History
+        </h3>
 
-      <div className="glass-effect rounded-lg mb-6 transition-all duration-300 ease-in-out">
-        <button
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className="flex justify-between items-center w-full p-2 md:p-4 text-left"
-        >
-          <span className="font-medium text-[var(--text-primary)]">
-            Filters
-          </span>
-          <span
-            className={`material-icons-outlined text-[var(--text-secondary)] transition-transform duration-300 ${
-              isFilterOpen ? "rotate-180" : ""
-            }`}
+        <div className="absolute right-8 md:right-[60px] z-40 bg-black/60 dark:bg-black/80 backdrop-blur-2lg rounded-lg mb-6 transition-all duration-300 ease-in-out">
+          {/* glass-effect hover:bg-[rgba(255,255,255,0.1)]
+          text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex
+          items-center gap-2 text-sm */}
+          <button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            // className="flex justify-between items-center w-full p-2 md:p-4 text-left text-sm"
+            className="text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex justify-between w-full items-center gap-2 text-sm"
           >
-            expand_more
-          </span>
-        </button>
+            <span className="">Filters</span>
+            <span
+              className={`material-icons-outlined text-[var(--text-secondary)] transition-transform duration-300 ${
+                isFilterOpen ? "rotate-180" : ""
+              }`}
+            >
+              expand_more
+            </span>
+          </button>
+          {isFilterOpen && (
+            <div className="px-4 pb-4">
+              <div className="border-t border-[var(--card-border)] pt-4 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      value={filters.startDate}
+                      max={
+                        filters.endDate
+                          ? getPrevDate(filters.endDate)
+                          : undefined
+                      }
+                      onChange={(e) =>
+                        setFilters((f) => ({ ...f, startDate: e.target.value }))
+                      }
+                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)] [color-scheme:dark]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      value={filters.endDate}
+                      min={
+                        filters.startDate
+                          ? getNextDate(filters.startDate)
+                          : undefined
+                      }
+                      onChange={(e) =>
+                        setFilters((f) => ({ ...f, endDate: e.target.value }))
+                      }
+                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)] [color-scheme:dark]"
+                    />
+                  </div>
+                </div>
 
-        {isFilterOpen && (
-          <div className="px-4 pb-4">
-            <div className="border-t border-[var(--card-border)] pt-4 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) =>
-                      setFilters((f) => ({ ...f, startDate: e.target.value }))
-                    }
-                    className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)] [color-scheme:dark]"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
+                      Source Chain
+                    </label>
+                    <select
+                      value={filters.sourceChain}
+                      onChange={(e) =>
+                        setFilters((f) => ({
+                          ...f,
+                          sourceChain: e.target.value,
+                        }))
+                      }
+                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)]"
+                    >
+                      <option>All Sources</option>
+                      {chains.map((chain) => (
+                        <option
+                          key={chain.universal_chain_id}
+                          value={chain.universal_chain_id}
+                          disabled={
+                            chain.universal_chain_id ===
+                            filters.destinationChain
+                          }
+                        >
+                          {chain.display_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
+                      Destination Chain
+                    </label>
+                    <select
+                      value={filters.destinationChain}
+                      onChange={(e) =>
+                        setFilters((f) => ({
+                          ...f,
+                          destinationChain: e.target.value,
+                        }))
+                      }
+                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)]"
+                    >
+                      <option>All Destinations</option>
+                      {chains.map((chain) => (
+                        <option
+                          key={chain.universal_chain_id}
+                          value={chain.universal_chain_id}
+                          disabled={
+                            chain.universal_chain_id === filters.sourceChain
+                          }
+                        >
+                          {chain.display_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
-                    End Date
-                  </label>
-                  <input
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) =>
-                      setFilters((f) => ({ ...f, endDate: e.target.value }))
-                    }
-                    className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)] [color-scheme:dark]"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
-                    Source Chain
+                    Status
                   </label>
                   <select
-                    value={filters.sourceChain}
-                    onChange={(e) =>
-                      setFilters((f) => ({ ...f, sourceChain: e.target.value }))
-                    }
-                    className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)]"
-                  >
-                    <option>All Sources</option>
-                    {chains.map((chain) => (
-                      <option
-                        key={chain.universal_chain_id}
-                        value={chain.universal_chain_id}
-                        disabled={
-                          chain.universal_chain_id === filters.destinationChain
-                        }
-                      >
-                        {chain.display_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
-                    Destination Chain
-                  </label>
-                  <select
-                    value={filters.destinationChain}
+                    value={filters.status}
                     onChange={(e) =>
                       setFilters((f) => ({
                         ...f,
-                        destinationChain: e.target.value,
+                        status: e.target.value,
                       }))
                     }
                     className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)]"
                   >
-                    <option>All Destinations</option>
-                    {chains.map((chain) => (
-                      <option
-                        key={chain.universal_chain_id}
-                        value={chain.universal_chain_id}
-                        disabled={
-                          chain.universal_chain_id === filters.sourceChain
-                        }
-                      >
-                        {chain.display_name}
-                      </option>
-                    ))}
+                    <option>All Statuses</option>
+                    <option value="completed">Completed</option>
+                    <option value="pending">Pending</option>
+                    <option value="failed">Failed</option>
                   </select>
                 </div>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-[var(--text-secondary)] mb-1 block">
-                  Status
-                </label>
-                <select
-                  value={filters.status}
-                  onChange={(e) =>
-                    setFilters((f) => ({
-                      ...f,
-                      status: e.target.value,
-                    }))
-                  }
-                  className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md px-3 py-2 text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-[var(--ring-color)]"
-                >
-                  <option>All Statuses</option>
-                  <option value="completed">Completed</option>
-                  <option value="pending">Pending</option>
-                  <option value="failed">Failed</option>
-                </select>
-              </div>
 
-              <div className="flex gap-2 justify-center">
-                <button
-                  className="glass-effect hover:bg-[rgba(255,255,255,0.1)] text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-sm"
-                  onClick={applyFilters}
-                >
-                  Apply Filters
-                </button>
-                <button
-                  className="glass-effect hover:bg-[rgba(255,255,255,0.1)] text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-sm"
-                  onClick={resetFilters}
-                >
-                  Reset Filters
-                </button>
+                <div className="flex gap-2 justify-center">
+                  <button
+                    className="glass-effect hover:bg-[rgba(255,255,255,0.1)] text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-xs md:text-sm"
+                    onClick={applyFilters}
+                  >
+                    Apply Filters
+                  </button>
+                  <button
+                    className="glass-effect hover:bg-[rgba(255,255,255,0.1)] text-[var(--text-primary)] font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-xs md:text-sm"
+                    onClick={resetFilters}
+                  >
+                    Reset Filters
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {isQAModalOpen && analysis && (
@@ -344,27 +365,18 @@ const TransactionList: React.FC<TransactionListProps> = ({
         </div>
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-1 h-screen overflow-y-auto">
         {filteredTransfers
           .slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
           .map((tx, idx) => (
-            <>
-              <div
-                onClick={() => {
-                  setIndexOfTransacton(idx);
-                  setIsTDModalOpen(true);
-                }}
-              >
-                <Transaction transfer={tx} idx={idx} key={idx} />
-              </div>
-              {/* {isTDModalOPen && (
-                <TransactionDetails
-                  tx={transfers[0]}
-                  isOpen={isTDModalOPen}
-                  setIsOpen={setIsTDModalOpen}
-                />
-              )} */}
-            </>
+            <div
+              onClick={() => {
+                setIndexOfTransacton(idx);
+                setIsTDModalOpen(true);
+              }}
+            >
+              <Transaction transfer={tx} idx={idx} key={idx} />
+            </div>
           ))}
       </div>
 
