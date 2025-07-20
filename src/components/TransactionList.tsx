@@ -122,6 +122,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
 
     setFilteredTransfers(result);
     setIsFilterOpen(false);
+    setPageNumber(1);
   }
 
   async function refreshTransfers() {
