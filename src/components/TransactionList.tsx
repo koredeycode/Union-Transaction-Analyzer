@@ -211,6 +211,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
                           ? getNextDate(filters.startDate)
                           : undefined
                       }
+                      max={new Date().toISOString().split("T")[0]}
                       onChange={(e) =>
                         setFilters((f) => ({ ...f, endDate: e.target.value }))
                       }
