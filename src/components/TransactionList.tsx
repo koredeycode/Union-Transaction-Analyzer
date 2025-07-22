@@ -380,7 +380,8 @@ const TransactionList: React.FC<TransactionListProps> = ({
               <Transaction transfer={tx} idx={idx} key={idx} />
             </div>
           ))}
-          <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+      </div>
+      <div className="flex-col sm:flex-row justify-between items-center mt-6 gap-4">
         <div className="flex items-center gap-2">
           <span className="text-sm text-[var(--text-secondary)]">
             Rows per page:
@@ -441,9 +442,6 @@ const TransactionList: React.FC<TransactionListProps> = ({
           </div>
         </div>
       </div>
-      </div>
-
-      
     </div>
   );
 };
