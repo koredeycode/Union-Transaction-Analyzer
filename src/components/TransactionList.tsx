@@ -381,7 +381,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
             </div>
           ))}
       </div>
-      <div className="flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+      <div className="flex flex-col md:flex-row md:justify-around items-center mt-6 gap-4">
         <div className="flex items-center gap-2">
           <span className="text-sm text-[var(--text-secondary)]">
             Rows per page:
